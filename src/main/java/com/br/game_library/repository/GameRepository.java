@@ -7,6 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface GameRepository extends JpaRepository<Game, Long> {
 
-    GameResponseDTO findByTitleContainingIgnoreCase(String title);
+    List<GameResponseDTO> findByTitleContainingIgnoreCase(String title);
 
 }
