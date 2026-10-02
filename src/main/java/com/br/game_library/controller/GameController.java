@@ -59,7 +59,7 @@ public class GameController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteGame(@PathVariable Long id){
-        service.remover(id);
+        service.remove(id);
 
         return ResponseEntity.noContent().build();
     }
