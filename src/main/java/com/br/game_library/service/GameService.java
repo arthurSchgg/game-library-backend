@@ -40,7 +40,7 @@ public class GameService {
         return mapper.toResponseDTO(game);
     }
 
-    public List<Game> findByTitle(String title){
+    public GameResponseDTO findByTitle(String title){
         return repository.findByTitleContainingIgnoreCase(title);
     }
 
