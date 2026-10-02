@@ -46,13 +46,11 @@ public class GameController {
     public ResponseEntity<GameResponseDTO> findById(@PathVariable Long id){
         return ResponseEntity.ok(service.findId(id));
     }
-    /*
-    @GetMapping("/{tile}")
-    public ResponseEntity<GameResponseDTO> findByTitle(@PathVariable String title){
+
+    @GetMapping("/search")
+    public ResponseEntity<List<GameResponseDTO>> findByTitle(@RequestParam String title){
         return ResponseEntity.ok(service.findByTitle(title));
     }
-
-     */
 
     @PutMapping("/{id}")
     public ResponseEntity<GameResponseDTO> update(@PathVariable Long id, @Valid @RequestBody GameRequestUpdateDTO requestUpdateDTO){
