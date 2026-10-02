@@ -40,7 +40,7 @@ public class GameService {
         return mapper.toResponseDTO(game);
     }
 
-    public GameResponseDTO findByTitle(String title){
+    public List<GameResponseDTO> findByTitle(String title){
         return repository.findByTitleContainingIgnoreCase(title);
     }
 
@@ -55,7 +55,7 @@ public class GameService {
         return mapper.toResponseDTO(updateGame);
     }
 
-    public void remover(Long id){
+    public void remove(Long id){
         Game game = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Game not found with ID: " + id));
 
