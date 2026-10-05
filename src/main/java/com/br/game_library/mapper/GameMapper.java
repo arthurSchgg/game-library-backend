@@ -31,6 +31,7 @@ public class GameMapper {
         game.setTitle(dto.title());
         game.setGenre(dto.genre());
         game.setPlatform(dto.platform());
+        game.setReleaseYear(dto.releaseYear());
         game.setRating(dto.rating());
         game.setDescription(dto.description());
         game.setImageUrl(dto.imageUrl());
