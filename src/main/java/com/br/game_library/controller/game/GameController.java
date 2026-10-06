@@ -1,9 +1,9 @@
-package com.br.game_library.controller;
+package com.br.game_library.controller.game;
 
-import com.br.game_library.dto.GameRequestDTO;
-import com.br.game_library.dto.GameRequestUpdateDTO;
-import com.br.game_library.dto.GameResponseDTO;
-import com.br.game_library.service.GameService;
+import com.br.game_library.dto.game.GameRequestDTO;
+import com.br.game_library.dto.game.GameRequestUpdateDTO;
+import com.br.game_library.dto.game.GameResponseDTO;
+import com.br.game_library.service.game.GameService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
