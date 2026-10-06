@@ -3,14 +3,12 @@ package com.br.game_library.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-@Getter
-@Setter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
-@Table(name = "game")
 @Entity
+@Table(name = "game")
 public class Game {
 
     @Id
