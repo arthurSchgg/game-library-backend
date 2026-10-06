@@ -1,4 +1,4 @@
-package com.br.game_library.dto;
+package com.br.game_library.dto.game;
 
 public record GameRequestDTO (
 
