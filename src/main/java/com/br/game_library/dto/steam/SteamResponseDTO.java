@@ -5,15 +5,5 @@ public record SteamResponseDTO (
 
         String name,
 
-        String description,
-
-        String imageUrl,
-
-        String releaseDate,
-
-        String developer,
-
-        String publisher,
-
-        Double price
+        Boolean success
 ){}
