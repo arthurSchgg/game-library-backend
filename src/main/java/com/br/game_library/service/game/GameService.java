@@ -1,4 +1,4 @@
-package com.br.game_library.service;
+package com.br.game_library.service.game;
 
 import com.br.game_library.dto.game.GameRequestDTO;
 import com.br.game_library.dto.game.GameRequestUpdateDTO;
