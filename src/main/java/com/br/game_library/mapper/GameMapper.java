@@ -1,8 +1,8 @@
 package com.br.game_library.mapper;
 
-import com.br.game_library.dto.GameRequestDTO;
-import com.br.game_library.dto.GameRequestUpdateDTO;
-import com.br.game_library.dto.GameResponseDTO;
+import com.br.game_library.dto.game.GameRequestDTO;
+import com.br.game_library.dto.game.GameRequestUpdateDTO;
+import com.br.game_library.dto.game.GameResponseDTO;
 import com.br.game_library.entity.Game;
 import org.springframework.stereotype.Component;
 
