@@ -49,6 +49,7 @@ public class GameMapper {
         game.setTitle(requestUpdateDTO.title());
         game.setGenre(requestUpdateDTO.genre());
         game.setPlatform(requestUpdateDTO.platform());
+        game.setReleaseYear(requestUpdateDTO.releaseYear());
         game.setRating(requestUpdateDTO.rating());
         game.setDescription(requestUpdateDTO.description());
         game.setImageUrl(requestUpdateDTO.imageUrl());
