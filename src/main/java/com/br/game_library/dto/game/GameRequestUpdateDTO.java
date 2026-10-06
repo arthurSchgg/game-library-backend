@@ -2,8 +2,6 @@ package com.br.game_library.dto.game;
 
 public record GameRequestUpdateDTO(
 
-        Long id,
-
         String title,
 
         String genre,
