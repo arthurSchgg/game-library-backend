@@ -3,7 +3,7 @@ package com.br.game_library.controller;
 import com.br.game_library.dto.game.GameRequestDTO;
 import com.br.game_library.dto.game.GameRequestUpdateDTO;
 import com.br.game_library.dto.game.GameResponseDTO;
-import com.br.game_library.service.GameService;
+import com.br.game_library.service.game.GameService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
