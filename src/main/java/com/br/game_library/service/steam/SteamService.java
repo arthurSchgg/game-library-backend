@@ -9,7 +9,7 @@ public class SteamService {
 
     private final RestClient restClient;
 
-    public SteamService(RestClient.builder builder){
+    public SteamService(RestClient.Builder builder){
         this.restClient = builder
                 .baseUrl("https://store.steampowered.com")
                 .build();
@@ -17,7 +17,7 @@ public class SteamService {
 
     public SteamResponseDTO findGame(Long appId){
 
-        return RestClient.get()
+        return restClient.get()
                 .uri("/api/appdetails?appids={appId}", appId)
                 .retrieve()
                 .body(SteamResponseDTO.class);
