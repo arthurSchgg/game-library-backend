@@ -16,7 +16,5 @@ public record GameRequestUpdateDTO(
 
         String description,
 
-        String imageUrl,
-
-        Boolean favorite
+        String imageUrl
 ){}
