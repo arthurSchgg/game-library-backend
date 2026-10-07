@@ -35,7 +35,7 @@ public class GameMapper {
         game.setRating(dto.rating());
         game.setDescription(dto.description());
         game.setImageUrl(dto.imageUrl());
-        game.setFavorite(dto.favorite());
+        game.setFavorite(false);
         return game;
     }
 
@@ -53,6 +53,5 @@ public class GameMapper {
         game.setRating(requestUpdateDTO.rating());
         game.setDescription(requestUpdateDTO.description());
         game.setImageUrl(requestUpdateDTO.imageUrl());
-        game.setFavorite(requestUpdateDTO.favorite());
     }
 }
