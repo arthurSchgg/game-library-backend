@@ -6,6 +6,7 @@ import com.br.game_library.dto.game.GameResponseDTO;
 import com.br.game_library.entity.Game;
 import com.br.game_library.mapper.GameMapper;
 import com.br.game_library.repository.GameRepository;
+import com.br.game_library.service.steam.SteamService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
