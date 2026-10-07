@@ -15,14 +15,17 @@ public class GameService {
 
     private final GameRepository repository;
     private final GameMapper mapper;
+    private final SteamService steamService;
 
-    public GameService(GameRepository repository, GameMapper mapper) {
+    public GameService(GameRepository repository, GameMapper mapper, SteamService steamService) {
         this.repository = repository;
         this.mapper = mapper;
+        this.steamService = steamService;
     }
 
     public GameResponseDTO registerGame(GameRequestDTO requestDTO){
         Game game = mapper.toEntity(requestDTO);
+
         Game salvo = repository.save(game);
 
         return mapper.toResponseDTO(salvo);
