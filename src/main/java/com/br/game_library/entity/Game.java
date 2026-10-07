@@ -17,6 +17,9 @@ public class Game {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "steam_app_id")
+    private Long steamAppId;
+
     @Column(nullable = false, length = 150)
     private String title;
 
