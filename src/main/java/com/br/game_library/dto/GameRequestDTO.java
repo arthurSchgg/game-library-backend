@@ -12,8 +12,6 @@ public record GameRequestDTO (
 
     Double rating,
 
-    String description,
-
-    String imageUrl
+    String description
 
 ){}
