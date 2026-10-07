@@ -1,8 +1,6 @@
-package com.br.game_library.dto;
+package com.br.game_library.dto.game;
 
-public record GameResponseDTO (
-
-        Long id,
+public record GameRequestUpdateDTO(
 
         String title,
 
@@ -16,8 +14,5 @@ public record GameResponseDTO (
 
         String description,
 
-        String imageUrl,
-
-        Boolean favorite
-
+        String imageUrl
 ){}
