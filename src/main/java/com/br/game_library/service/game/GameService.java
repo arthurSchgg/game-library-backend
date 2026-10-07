@@ -6,6 +6,7 @@ import com.br.game_library.dto.game.GameResponseDTO;
 import com.br.game_library.entity.Game;
 import com.br.game_library.mapper.GameMapper;
 import com.br.game_library.repository.GameRepository;
+import com.br.game_library.service.steam.SteamService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,14 +16,17 @@ public class GameService {
 
     private final GameRepository repository;
     private final GameMapper mapper;
+    private final SteamService steamService;
 
-    public GameService(GameRepository repository, GameMapper mapper) {
+    public GameService(GameRepository repository, GameMapper mapper, SteamService steamService) {
         this.repository = repository;
         this.mapper = mapper;
+        this.steamService = steamService;
     }
 
     public GameResponseDTO registerGame(GameRequestDTO requestDTO){
         Game game = mapper.toEntity(requestDTO);
+
         Game salvo = repository.save(game);
 
         return mapper.toResponseDTO(salvo);
