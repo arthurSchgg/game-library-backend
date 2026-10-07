@@ -14,8 +14,6 @@ public record GameRequestDTO (
 
     String description,
 
-    String imageUrl,
-
-    Boolean favorite
+    String imageUrl
 
 ){}
