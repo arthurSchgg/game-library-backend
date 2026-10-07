@@ -57,6 +57,11 @@ public class GameController {
         return ResponseEntity.ok(service.update(id, requestUpdateDTO));
     }
 
+    @PatchMapping("/{id}/favorite")
+    public ResponseEntity<GameResponseDTO> toggleGameFavorite(@PathVariable Long id){
+        return ResponseEntity.ok(service.toggleGame(id));
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteGame(@PathVariable Long id){
         service.remove(id);
