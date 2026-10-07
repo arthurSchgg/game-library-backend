@@ -55,6 +55,17 @@ public class GameService {
         return mapper.toResponseDTO(updateGame);
     }
 
+    public GameResponseDTO toggleGame(Long id){
+        Game game = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Game not found with ID: " + id));
+
+        game.setFavorite(!Boolean.TRUE.equals(game.getFavorite()));
+
+        Game updateGame = repository.save(game);
+
+        return mapper.toResponseDTO(updateGame);
+    }
+
     public void remove(Long id){
         Game game = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Game not found with ID: " + id));

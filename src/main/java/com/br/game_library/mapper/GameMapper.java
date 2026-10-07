@@ -31,10 +31,11 @@ public class GameMapper {
         game.setTitle(dto.title());
         game.setGenre(dto.genre());
         game.setPlatform(dto.platform());
+        game.setReleaseYear(dto.releaseYear());
         game.setRating(dto.rating());
         game.setDescription(dto.description());
         game.setImageUrl(dto.imageUrl());
-        game.setFavorite(dto.favorite());
+        game.setFavorite(false);
         return game;
     }
 
@@ -48,9 +49,9 @@ public class GameMapper {
         game.setTitle(requestUpdateDTO.title());
         game.setGenre(requestUpdateDTO.genre());
         game.setPlatform(requestUpdateDTO.platform());
+        game.setReleaseYear(requestUpdateDTO.releaseYear());
         game.setRating(requestUpdateDTO.rating());
         game.setDescription(requestUpdateDTO.description());
         game.setImageUrl(requestUpdateDTO.imageUrl());
-        game.setFavorite(requestUpdateDTO.favorite());
     }
 }
