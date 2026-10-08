@@ -57,7 +57,8 @@ public class GameController {
             ),
             @ApiResponse(
                     responseCode = "404",
-                    description = "No games found"
+                    description = "No games found",
+                    content = @Content
             )
     })
     @GetMapping("/list")
@@ -123,7 +124,8 @@ public class GameController {
             ),
             @ApiResponse (
                     responseCode = "404",
-                    description = "Game not found"
+                    description = "Game not found",
+                    content = @Content
             )
     })
     @GetMapping("/{id}")
@@ -147,11 +149,12 @@ public class GameController {
             @ApiResponse(
                     responseCode = "200",
                     description = "Game found",
-                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = GameResponseDTO.class)))
+                        content = @Content(array = @ArraySchema(schema = @Schema(implementation = GameResponseDTO.class)))
             ),
             @ApiResponse (
                     responseCode = "404",
-                    description = "Game not found"
+                    description = "Game not found",
+                    content = @Content
             )
     })
     @GetMapping("/search")
