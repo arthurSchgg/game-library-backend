@@ -47,7 +47,7 @@ public record GameRequestUpdateDTO(
                 example = "1900"
         )
         @Min(1970)
-        @Max(2026)
+        @Max(2027)
         Integer releaseYear,
 
         @Schema(

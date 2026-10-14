@@ -27,12 +27,13 @@ public class GameMapper {
         return new GameResponseDTO(
                 game.getId(),
                 game.getTitle(),
+                game.getSteamAppId(),
+                game.getImageUrl(),
                 game.getGenre(),
                 game.getPlatform(),
                 game.getReleaseYear(),
                 game.getRating(),
                 game.getDescription(),
-                game.getImageUrl(),
                 game.getFavorite()
         );
     }
