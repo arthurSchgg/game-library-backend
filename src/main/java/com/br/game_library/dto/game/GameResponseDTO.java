@@ -30,6 +30,14 @@ public record GameResponseDTO(
         )
         String title,
 
+        Long steamAppId,
+
+        @Schema(
+                description = "Image url of the game",
+                example = "https://cdn2.unrealengine.com/fortnite-og-image-1200x630-1200x630-6f2e5c5f8c5a.jpg"
+        )
+        String imageUrl,
+
         @Schema(
                 description = "Genre of the game",
                 example = "Multiplayer"
@@ -59,12 +67,6 @@ public record GameResponseDTO(
                 example = "A most famous multiplayer game of the world"
         )
         String description,
-
-        @Schema(
-                description = "Image url of the game",
-                example = "https://cdn2.unrealengine.com/fortnite-og-image-1200x630-1200x630-6f2e5c5f8c5a.jpg"
-        )
-        String imageUrl,
 
         @Schema(
                 description = "Favorite or unfavorite the game",

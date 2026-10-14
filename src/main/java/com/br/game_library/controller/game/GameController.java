@@ -11,7 +11,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import jdk.jfr.ContentType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +24,6 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("v1/game-library")
-@CrossOrigin(origins = "*", allowedHeaders = "*")
 public class GameController {
 
     private final GameService service;
@@ -61,7 +59,7 @@ public class GameController {
                     content = @Content
             )
     })
-    @GetMapping("/list")
+    @GetMapping
     public ResponseEntity<List<GameResponseDTO>> listAll() {
         return ResponseEntity.ok(service.list());
     }
@@ -90,11 +88,11 @@ public class GameController {
                     description = "Data request invalid",
                     content = @Content)
     })
-    @PostMapping("/register")
+    @PostMapping
     public ResponseEntity<GameResponseDTO> registerGame(@Valid @RequestBody GameRequestDTO requestDTO) {
         GameResponseDTO responseDTO = service.registerGame(requestDTO);
 
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri()
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(responseDTO.id())
                 .toUri();

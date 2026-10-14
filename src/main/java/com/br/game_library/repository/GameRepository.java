@@ -16,6 +16,6 @@ public interface GameRepository extends JpaRepository<Game, Long> {
      * @param title Title of the Game filtering
      * @return The Game the type informed
      */
-    List<GameResponseDTO> findByTitleContainingIgnoreCase(String title);
+    List<Game> findByTitleContainingIgnoreCase(String title);
 
 }
