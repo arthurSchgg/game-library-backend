@@ -64,7 +64,7 @@ public class GameService {
      *
      * @param id Identifier of the Game
      * @return Game DTO found
-     * @throws RuntimeException If no Pokémon with the specified ID exists
+     * @throws RuntimeException If no Game with the specified ID exists
      */
     public GameResponseDTO findId(Long id){
         Game game = repository.findById(id)
@@ -79,7 +79,7 @@ public class GameService {
      * @param title Title of the Game
      * @return Game DTO found
      */
-    public List<GameResponseDTO> findByTitle(String title){
+    public List<Game> findByTitle(String title){
         return repository.findByTitleContainingIgnoreCase(title);
     }
 
@@ -89,7 +89,7 @@ public class GameService {
      * @param id Identifier of the Game
      * @param requestUpdateDTO New Game data
      * @return Updated Game DTO
-     * @throws RuntimeException If no Pokémon with the specified ID exists
+     * @throws RuntimeException If no Game with the specified ID exists
      */
     public GameResponseDTO update(Long id, GameRequestUpdateDTO requestUpdateDTO){
         Game game = repository.findById(id)
@@ -107,7 +107,7 @@ public class GameService {
      *
      * @param id Identifier of the Game
      * @return The Favorite attribute of the Game entity changed to True or False
-     * @throws RuntimeException If no Pokémon with the specified ID exists
+     * @throws RuntimeException If no Game with the specified ID exists
      */
     public GameResponseDTO toggleGame(Long id){
         Game game = repository.findById(id)
@@ -124,7 +124,7 @@ public class GameService {
      * Deletes the game selected by ID
      *
      * @param id Identifier of the Game
-     * @throws RuntimeException If no Pokémon with the specified ID exists
+     * @throws RuntimeException If no Game with the specified ID exists
      */
     public void remove(Long id){
         Game game = repository.findById(id)
