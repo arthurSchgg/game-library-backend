@@ -24,6 +24,10 @@ public record GameRequestDTO(
         @Size(max = 150)
         String title,
 
+        Long steamAppId,
+
+        String imageUrl,
+
         @Schema(
                 description = "Genre of the game",
                 example = "Action"
@@ -43,7 +47,7 @@ public record GameRequestDTO(
                 example = "1999"
         )
         @Min(1970)
-        @Max(2026)
+        @Max(2027)
         Integer releaseYear,
 
         @Schema(
@@ -58,11 +62,7 @@ public record GameRequestDTO(
                 description = "Description   of the game",
                 example = "The Super Mario game is a classic game from Nintendo"
         )
-        String description,
-
-        Long steamAppId,
-
-        String imageUrl
+        String description
 
 ) {
 }

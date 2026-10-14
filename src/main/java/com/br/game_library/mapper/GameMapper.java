@@ -47,6 +47,8 @@ public class GameMapper {
         Game game = new Game();
 
         game.setTitle(dto.title());
+        game.setSteamAppId(dto.steamAppId());
+        game.setImageUrl(dto.imageUrl());
         game.setGenre(dto.genre());
         game.setPlatform(dto.platform());
         game.setReleaseYear(dto.releaseYear());
@@ -79,6 +81,8 @@ public class GameMapper {
      */
     public void updateEntity(GameRequestUpdateDTO requestUpdateDTO, Game game){
         game.setTitle(requestUpdateDTO.title());
+        game.setSteamAppId(requestUpdateDTO.steamAppId());
+        game.setImageUrl(requestUpdateDTO.imageUrl());
         game.setGenre(requestUpdateDTO.genre());
         game.setPlatform(requestUpdateDTO.platform());
         game.setReleaseYear(requestUpdateDTO.releaseYear());

@@ -79,8 +79,9 @@ public class GameService {
      * @param title Title of the Game
      * @return Game DTO found
      */
-    public List<Game> findByTitle(String title){
-        return repository.findByTitleContainingIgnoreCase(title);
+    public List<GameResponseDTO> findByTitle(String title){
+        List<Game> games = repository.findByTitleContainingIgnoreCase(title);
+        return mapper.toResponseList(games);
     }
 
     /**

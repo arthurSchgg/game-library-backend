@@ -24,6 +24,10 @@ public record GameRequestUpdateDTO(
         @Size(max = 150)
         String title,
 
+        Long steamAppId,
+
+        String imageUrl,
+
         @Schema(
                 description = "A new genre for the game",
                 example = "Strategy"
@@ -58,11 +62,7 @@ public record GameRequestUpdateDTO(
                 description = "A new description for the game",
                 example = "The most famous strategy game in the world"
         )
-        String description,
-
-        Long steamAppId,
-
-        String imageUrl
+        String description
 
 ) {
 }
