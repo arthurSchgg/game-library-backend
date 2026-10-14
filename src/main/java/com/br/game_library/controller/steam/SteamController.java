@@ -25,8 +25,8 @@ public class SteamController {
         return ResponseEntity.ok(service.findGame(appId));
     }
 
-    @GetMapping("/{search}")
-    public ResponseEntity<SteamSearchResponseDTO> searchByName(@RequestParam String  nome){
-        return ResponseEntity.ok(service.searchByName(nome));
+    @GetMapping("/search")
+    public ResponseEntity<SteamSearchResponseDTO> searchByName(@RequestParam String name){
+        return ResponseEntity.ok(service.searchByName(name));
     }
 }
