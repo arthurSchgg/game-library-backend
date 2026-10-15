@@ -40,6 +40,8 @@ public class GameMapper {
 
     /**
      * Converts DTO register into a new Entity (without ID)
+     * <p>
+     * The new Game always starts as not favorite.
      *
      * @param dto Receives data in request of register
      * @return A new Entity made for persistence

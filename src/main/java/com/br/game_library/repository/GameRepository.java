@@ -1,6 +1,5 @@
 package com.br.game_library.repository;
 
-import com.br.game_library.dto.game.GameResponseDTO;
 import com.br.game_library.entity.Game;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
@@ -11,10 +10,12 @@ import java.util.List;
 public interface GameRepository extends JpaRepository<Game, Long> {
 
     /**
-     * Find the Games whose title is exactly the person informed
+     * Finds the Games whose title contains the given text, ignoring upper/lower case
+     * <p>
+     * Example: {@code "zel"} finds "Zelda" and "The Legend of Zelda".
      *
-     * @param title Title of the Game filtering
-     * @return The Game the type informed
+     * @param title Text to search in the title of the Game
+     * @return The matching Games (empty if there are none)
      */
     List<Game> findByTitleContainingIgnoreCase(String title);
 
