@@ -5,11 +5,14 @@ import com.br.game_library.dto.game.GameRequestUpdateDTO;
 import com.br.game_library.dto.game.GameResponseDTO;
 import com.br.game_library.service.game.GameService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,44 +22,26 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-/**
- * REST controller responsible for Game endpoints
- */
+@Tag(name = "Games", description = "Manage the games of the library: register, search, update, favorite and remove")
 @Controller
 @RequestMapping("v1/game-library")
 public class GameController {
 
     private final GameService service;
 
-    /**
-     * Made a Controller yours dependencies
-     *
-     * @param service Service with the business rules of Game
-     */
     public GameController(GameService service) {
         this.service = service;
     }
 
-    /**
-     * Lists all registered Games
-     *
-     * @return {@code 200 OK} with list of Games (empty if there are none)
-     */
-
     @Operation(
             summary = "List Games",
-            description = "Returned all registered Games"
+            description = "Returns all registered Games. The list is empty when there are none."
     )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = " List successfully returned",
+                    description = "List successfully returned (empty if there are no games)",
                     content = @Content(array = @ArraySchema(schema = @Schema(implementation = GameResponseDTO.class)))
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "No games found",
-                    content = @Content
             )
     })
     @GetMapping
@@ -64,29 +49,24 @@ public class GameController {
         return ResponseEntity.ok(service.list());
     }
 
-    /**
-     * Register a Game
-     *
-     * @param requestDTO Game data to created
-     * @return {@code 201 Created} with the saved Game and header {@code Location}
-     * pointing to the new feature
-     */
-
     @Operation(
             summary = "Register a Game",
-            description = "Registers a new Game into a BD"
+            description = "Registers a new Game in the database. The cover image (imageUrl) and the Steam app ID "
+                    + "are optional and usually come from the Steam search. "
+                    + "The new Game starts as not favorite."
     )
-
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "201",
-                    description = "Game sucessfully created",
+                    description = "Game successfully created",
+                    headers = @Header(name = "Location", description = "URI of the created Game"),
                     content = @Content(schema = @Schema(implementation = GameResponseDTO.class))
             ),
             @ApiResponse(
                     responseCode = "400",
-                    description = "Data request invalid",
-                    content = @Content)
+                    description = "Invalid request data (e.g. empty title or rating out of range)",
+                    content = @Content
+            )
     })
     @PostMapping
     public ResponseEntity<GameResponseDTO> registerGame(@Valid @RequestBody GameRequestDTO requestDTO) {
@@ -101,18 +81,10 @@ public class GameController {
         return ResponseEntity.created(uri).body(responseDTO);
     }
 
-    /**
-     * Find a Game by ID
-     *
-     * @param id Identifier of the Game
-     * @return {@code 200 OK} with the Game found
-     */
-
     @Operation(
             summary = "Find a Game by ID",
-            description = "Search for a game by ID"
+            description = "Returns the Game with the given ID"
     )
-
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
@@ -127,57 +99,51 @@ public class GameController {
             )
     })
     @GetMapping("/{id}")
-    public ResponseEntity<GameResponseDTO> findById(@PathVariable Long id) {
+    public ResponseEntity<GameResponseDTO> findById(
+            @Parameter(description = "ID of the Game", example = "1") @PathVariable Long id) {
         return ResponseEntity.ok(service.findId(id));
     }
 
-    /**
-     * Find a Game by Title
-     *
-     * @param title Title of the game
-     * @return {@code 200 OK} with the Game found
-     */
-
     @Operation(
-            summary = "Find a Game by title",
-            description = "Search for a game by title"
+            summary = "Find Games by title",
+            description = "Returns the Games whose title contains the given text, ignoring upper/lower case. "
+                    + "The list is empty when nothing matches."
     )
-
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Game found",
-                        content = @Content(array = @ArraySchema(schema = @Schema(implementation = GameResponseDTO.class)))
+                    description = "Search done (empty list if no Game matches)",
+                    content = @Content(array = @ArraySchema(schema = @Schema(implementation = GameResponseDTO.class)))
             ),
-            @ApiResponse (
-                    responseCode = "404",
-                    description = "Game not found",
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "The title parameter was not informed",
                     content = @Content
             )
     })
     @GetMapping("/search")
-    public ResponseEntity<List<GameResponseDTO>> findByTitle(@RequestParam String title) {
+    public ResponseEntity<List<GameResponseDTO>> findByTitle(
+            @Parameter(description = "Text contained in the title (not case sensitive)", example = "zelda")
+            @RequestParam String title) {
         return ResponseEntity.ok(service.findByTitle(title));
     }
 
-    /**
-     * Made an update of a Game
-     *
-     * @param id Identifier of the Game
-     * @param requestUpdateDTO New game data
-     * @return {@code 200 OK} with update Game
-     */
-
     @Operation(
             summary = "Update a Game",
-            description = "Made an update of a Game"
+            description = "Replaces the data of an existing Game. All fields are overwritten, "
+                    + "so send the current values of the fields that must not change. "
+                    + "The favorite status is not changed by this endpoint."
     )
-
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Updated game",
+                    description = "Game updated",
                     content = @Content(schema = @Schema(implementation = GameResponseDTO.class))
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid request data",
+                    content = @Content
             ),
             @ApiResponse(
                     responseCode = "404",
@@ -186,25 +152,21 @@ public class GameController {
             )
     })
     @PutMapping("/{id}")
-    public ResponseEntity<GameResponseDTO> update(@PathVariable Long id, @Valid @RequestBody GameRequestUpdateDTO requestUpdateDTO) {
+    public ResponseEntity<GameResponseDTO> update(
+            @Parameter(description = "ID of the Game to update", example = "1") @PathVariable Long id,
+            @Valid @RequestBody GameRequestUpdateDTO requestUpdateDTO) {
         return ResponseEntity.ok(service.update(id, requestUpdateDTO));
     }
 
-    /**
-     * Made a favorite or unfavorite a Game
-     *
-     * @param id Identifier of the Game
-     * @return {@code 200 OK} with favorite or unfavorite Game
-     */
-
     @Operation(
-            summary = "Made a favorite or unfavorite a Game"
+            summary = "Favorite or unfavorite a Game",
+            description = "Inverts the favorite status of the Game: a favorite Game becomes "
+                    + "not favorite and vice versa."
     )
-
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "200",
-                    description = "Game favorited or unfavorited",
+                    description = "Favorite status changed",
                     content = @Content(schema = @Schema(implementation = GameResponseDTO.class))
             ),
             @ApiResponse(
@@ -214,24 +176,19 @@ public class GameController {
             )
     })
     @PatchMapping("/{id}/favorite")
-    public ResponseEntity<GameResponseDTO> toggleGameFavorite(@PathVariable Long id) {
+    public ResponseEntity<GameResponseDTO> toggleGameFavorite(
+            @Parameter(description = "ID of the Game", example = "1") @PathVariable Long id) {
         return ResponseEntity.ok(service.toggleGame(id));
     }
 
-    /**
-     * Removes a Game
-     *
-     * @param id Identifier of the Game
-     * @return {@code 204 No Content} when the removal is complete
-     */
-
     @Operation(
-            summary = "Removes a Game"
+            summary = "Remove a Game",
+            description = "Permanently removes the Game with the given ID"
     )
     @ApiResponses(value = {
             @ApiResponse(
                     responseCode = "204",
-                    description = "Removed successfully game",
+                    description = "Game removed successfully",
                     content = @Content
             ),
             @ApiResponse(
@@ -241,7 +198,8 @@ public class GameController {
             )
     })
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteGame(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteGame(
+            @Parameter(description = "ID of the Game to remove", example = "1") @PathVariable Long id) {
         service.remove(id);
 
         return ResponseEntity.noContent().build();

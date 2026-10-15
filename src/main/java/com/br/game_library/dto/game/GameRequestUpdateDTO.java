@@ -7,6 +7,8 @@ import jakarta.validation.constraints.*;
  * Input data for updating a Game
  *
  * @param title       New name
+ * @param steamAppId  New Steam app ID (optional)
+ * @param imageUrl    New URL of the cover image
  * @param genre       New genre
  * @param platform    New platform
  * @param releaseYear New release year
@@ -24,8 +26,16 @@ public record GameRequestUpdateDTO(
         @Size(max = 150)
         String title,
 
+        @Schema(
+                description = "A new Steam app ID for the game (optional)",
+                example = "1245620"
+        )
         Long steamAppId,
 
+        @Schema(
+                description = "A new URL of the game cover image",
+                example = "https://cdn.akamai.steamstatic.com/steam/apps/1245620/header.jpg"
+        )
         String imageUrl,
 
         @Schema(

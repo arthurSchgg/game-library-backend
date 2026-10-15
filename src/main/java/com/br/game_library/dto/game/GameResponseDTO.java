@@ -7,12 +7,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
  *
  * @param id          Identifier generated for the BD
  * @param title       Title of the game
+ * @param steamAppId  Steam app ID of the game (null if not linked to Steam)
+ * @param imageUrl    Image URL of the game
  * @param genre       Genre of the game
  * @param platform    Platform of the game
  * @param releaseYear Release year of the game
  * @param rating      Rating of the game
  * @param description Description of the game
- * @param imageUrl    Image URL of the game
  * @param favorite    Game added to favorites
  */
 @Schema(description = "Game returned by the API")
@@ -30,6 +31,10 @@ public record GameResponseDTO(
         )
         String title,
 
+        @Schema(
+                description = "Steam app ID of the game (null if not linked to Steam)",
+                example = "1245620"
+        )
         Long steamAppId,
 
         @Schema(
@@ -70,7 +75,7 @@ public record GameResponseDTO(
 
         @Schema(
                 description = "Favorite or unfavorite the game",
-                example = "True or false"
+                example = "true"
         )
         Boolean favorite
 

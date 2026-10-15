@@ -10,9 +10,20 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
+/**
+ * Configuration of the OpenAPI (Swagger) documentation.
+ * <p>
+ * Defines the title, version, contact and server shown in the Swagger UI,
+ * available at {@code /swagger-ui.html}.
+ */
 @Configuration
 public class OpenApiConfig {
 
+    /**
+     * Builds the general information of the API shown in the documentation.
+     *
+     * @return The {@link OpenAPI} metadata of the Game Library API
+     */
     @Bean
     public OpenAPI customOpenAPI() {
 
