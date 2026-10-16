@@ -1,170 +1,170 @@
 # 🎮 Game Library API
 
-API REST para gerenciar uma biblioteca pessoal de jogos. Permite cadastrar, consultar, atualizar, favoritar e remover jogos, e usa a **Steam Store** para encontrar o *app ID* e a *imagem de capa* de cada jogo a partir do nome.
+REST API to manage a personal game library. It allows you to create, query, update, favorite, and delete games, and it uses the **Steam Store** to find the *app ID* and the *cover image* of each game based on its name.
 
-> Este repositório contém o **backend**. O front-end (HTML, CSS e JavaScript) fica em um repositório separado: ```https://github.com/arthurSchgg/game-library-frontend```.
+> This repository contains the **backend**. The front-end (HTML, CSS, and JavaScript) lives in a separate repository: `https://github.com/arthurSchgg/game-library-frontend`.
 
-🌐 **API em produção:** `https://game-library-backend-ebrh.onrender.com/`
+🌐 **API in production:** `https://game-library-backend-ebrh.onrender.com/`
 
 ---
 
-## 🛠 Tecnologias
+## 🛠 Tech Stack
 
-| Tecnologia | Uso |
+| Technology | Purpose |
 |---|---|
-| Java 21 | Linguagem |
+| Java 21 | Language |
 | Spring Boot 4.1.1 | Framework (Web MVC, Data JPA, Validation) |
-| MySQL 8.4 | Banco de dados (via Docker) |
-| Hibernate / JPA | Persistência |
-| Springdoc OpenAPI | Documentação Swagger |
-| RestClient | Consumo da API da Steam Store |
-| Lombok | Redução de código repetitivo na entidade |
-| Maven | Build e dependências |
+| MySQL 8.4 | Database (via Docker) |
+| Hibernate / JPA | Persistence |
+| Springdoc OpenAPI | Swagger documentation |
+| RestClient | Steam Store API consumption |
+| Lombok | Boilerplate reduction on the entity |
+| Maven | Build and dependencies |
 
 ---
 
-## 🏗 Arquitetura
+## 🏗 Architecture
 
-O projeto é dividido em camadas, e cada uma tem uma única responsabilidade:
+The project is split into layers, each with a single responsibility:
 
 ```
-Cliente (front-end)
+Client (front-end)
       │  JSON
       ▼
-┌─────────────┐   valida (@Valid) e devolve ResponseEntity
+┌─────────────┐   validates (@Valid) and returns ResponseEntity
 │ Controller  │   GameController · SteamController
 └─────┬───────┘
       ▼
-┌─────────────┐   regras de negócio, converte Entidade ⇄ DTO
+┌─────────────┐   business rules, converts Entity ⇄ DTO
 │  Service    │   GameService · SteamService
 └─────┬───────┘
-      ├──► Mapper ───► converte Game ⇄ DTOs
+      ├──► Mapper ───► converts Game ⇄ DTOs
       ▼
 ┌─────────────┐
 │ Repository  │   GameRepository (Spring Data JPA) ──► MySQL
 └─────────────┘
 ```
 
-**Estrutura de pastas**
+**Folder structure**
 
 ```
 src/main/java/com/br/game_library
-├── config/        # CORS, RestClient e OpenAPI
-├── controller/    # game/ e steam/
-├── dto/           # game/ e steam/ (records)
+├── config/        # CORS, RestClient, and OpenAPI
+├── controller/    # game/ and steam/
+├── dto/           # game/ and steam/ (records)
 ├── entity/        # Game
 ├── mapper/        # GameMapper
 ├── repository/    # GameRepository
-└── service/       # game/ e steam/
+└── service/       # game/ and steam/
 ```
 
-A entidade `Game` nunca sai do Service: o Controller só enxerga **DTOs**.
+The `Game` entity never leaves the Service layer: the Controller only sees **DTOs**.
 
 ---
 
-## 🚀 Como executar
+## 🚀 How to Run
 
-### Pré-requisitos
+### Prerequisites
 
 - Java 21
-- Docker e Docker Compose
-- (Opcional) Maven, pois o projeto já inclui o `mvnw`
+- Docker and Docker Compose
+- (Optional) Maven, since the project already includes the `mvnw` wrapper
 
-### Passo a passo
+### Step by step
 
-**1. Subir o banco de dados**
+**1. Start the database**
 
 ```bash
 cd docker
 docker compose up -d
 ```
 
-Isso cria o MySQL `game-library-mysql` na porta **3333** (do computador) com o banco `game_library`.
+This creates the MySQL container `game-library-mysql` on port **3333** (host machine) with the database `game_library`.
 
-**2. Executar a aplicação**
+**2. Run the application**
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
-(no Windows: `mvnw.cmd spring-boot:run`) ou execute a classe `GameLibraryApplication` pela IDE.
+(on Windows: `mvnw.cmd spring-boot:run`) or run the `GameLibraryApplication` class from your IDE.
 
-**3. Acessar**
+**3. Access**
 
 - API: `http://localhost:8085`
 - Swagger UI: `http://localhost:8085/swagger-ui.html`
 
-### Configuração (`application.properties`)
+### Configuration (`application.properties`)
 
-| Propriedade | Valor |
+| Property | Value |
 |---|---|
 | `server.port` | `8085` |
 | `spring.datasource.url` | `jdbc:mysql://localhost:3333/game_library` |
 | `spring.datasource.username` / `password` | `root` / `root` |
-| `spring.jpa.hibernate.ddl-auto` | `update` (a tabela `game` é criada/ajustada automaticamente) |
+| `spring.jpa.hibernate.ddl-auto` | `update` (the `game` table is created/adjusted automatically) |
 
-> ⚠️ As credenciais acima são **somente para desenvolvimento local**. Em outro ambiente, use variáveis de ambiente e nunca versione senhas reais.
+> ⚠️ The credentials above are **for local development only**. In any other environment, use environment variables and never commit real passwords.
 
 ### CORS
 
-O `WebConfig` libera chamadas do navegador apenas para `http://localhost:5500` e `http://127.0.0.1:5500` (porta padrão do Live Server). Se o seu front usar outra porta, ajuste `allowedOrigins` em `config/WebConfig.java`.
+`WebConfig` allows browser calls only from `http://localhost:5500` and `http://127.0.0.1:5500` (the default Live Server port). If your front-end uses a different port, adjust `allowedOrigins` in `config/WebConfig.java`.
 
 ---
 
-## 📖 Documentação interativa (Swagger)
+## 📖 Interactive Documentation (Swagger)
 
-Com a aplicação rodando, abra:
+With the application running, open:
 
 ```
 http://localhost:8085/swagger-ui.html
 ```
 
-Lá é possível ver todos os endpoints, os formatos de entrada e saída, os códigos de resposta e **testar as requisições direto pelo navegador** (botão *Try it out*). A especificação em JSON fica em `/v3/api-docs`.
+There you can see all endpoints, input and output formats, response codes, and **test requests directly from the browser** (*Try it out* button). The JSON specification is available at `/v3/api-docs`.
 
 ---
 
-## 🗃 Modelo de dados e validações
+## 🗃 Data Model and Validations
 
-Tabela `game`:
+`game` table:
 
-| Campo | Tipo | Regras |
+| Field | Type | Rules |
 |---|---|---|
-| `id` | `Long` | Gerado automaticamente |
-| `title` | `String` | **Obrigatório**, até 150 caracteres |
-| `steamAppId` | `Long` | Opcional |
-| `imageUrl` | `String` | Opcional |
-| `genre` | `String` | Opcional, até 100 caracteres |
-| `platform` | `String` | Opcional, até 50 caracteres |
-| `releaseYear` | `Integer` | Opcional, entre 1970 e 2027 |
-| `rating` | `Double` | Opcional, entre 0.0 e 10.0 |
-| `description` | `String` | Opcional (`TEXT`) |
-| `favorite` | `Boolean` | Começa como `false` |
+| `id` | `Long` | Auto-generated |
+| `title` | `String` | **Required**, up to 150 characters |
+| `steamAppId` | `Long` | Optional |
+| `imageUrl` | `String` | Optional |
+| `genre` | `String` | Optional, up to 100 characters |
+| `platform` | `String` | Optional, up to 50 characters |
+| `releaseYear` | `Integer` | Optional, between 1970 and 2027 |
+| `rating` | `Double` | Optional, between 0.0 and 10.0 |
+| `description` | `String` | Optional (`TEXT`) |
+| `favorite` | `Boolean` | Starts as `false` |
 
-As regras são aplicadas com `@Valid` nos DTOs de entrada: dados inválidos são barrados **antes** de chegar à regra de negócio, e a requisição retorna `400 Bad Request`.
+The rules are enforced with `@Valid` on the input DTOs: invalid data is blocked **before** reaching the business logic, and the request returns `400 Bad Request`.
 
-> No `PUT`, todos os campos são sobrescritos (inclusive `steamAppId` e `imageUrl`). Reenvie os valores atuais dos campos que não devem mudar. O status de favorito **não** é alterado pelo `PUT`: use o `PATCH`.
+> On `PUT`, all fields are overwritten (including `steamAppId` and `imageUrl`). Resend the current values of any fields that should not change. The favorite status is **not** changed by `PUT`: use `PATCH` for that.
 
 ---
 
-## 🎯 Integração com a Steam
+## 🎯 Steam Integration
 
-O navegador **não pode** chamar a Steam diretamente, porque a loja não libera CORS. Por isso a API funciona como intermediária (proxy):
+The browser **cannot** call Steam directly, because the store does not allow CORS. That is why the API acts as a middleman (proxy):
 
 ```
 Front-end ──► Game Library API ──► Steam Store
  (JS)          :8085               store.steampowered.com
 ```
 
-**Fluxo para cadastrar um jogo com capa:**
+**Flow to register a game with a cover image:**
 
-1. O usuário digita o nome do jogo.
-2. O front chama `GET /v1/steam/search?name=...` e mostra os resultados.
-3. O usuário escolhe um (a busca costuma trazer DLCs e trilhas sonoras também).
-4. O front chama `GET /v1/steam/{appId}` para obter `header_image` (capa em boa resolução).
-5. O front preenche `title`, `steamAppId` e `imageUrl` e envia `POST /v1/game-library`.
+1. The user types the game name.
+2. The front-end calls `GET /v1/steam/search?name=...` and displays the results.
+3. The user picks one (the search often returns DLCs and soundtracks as well).
+4. The front-end calls `GET /v1/steam/{appId}` to get `header_image` (a high-resolution cover).
+5. The front-end fills in `title`, `steamAppId`, and `imageUrl` and sends `POST /v1/game-library`.
 
-> Redes corporativas com firewall podem bloquear `store.steampowered.com`. Nesse caso a API responde `500` (erro de handshake SSL) nas rotas da Steam. As rotas de `game-library` continuam funcionando normalmente.
+> Corporate networks with firewalls may block `store.steampowered.com`. In that case the API responds with `500` (SSL handshake error) on the Steam routes. The `game-library` routes keep working normally.
 
-## 👤 Autor
+## 👤 Author
 
-**Arthur Miguel Schlichting**  
+**Arthur Miguel Schlichting**
