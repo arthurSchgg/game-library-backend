@@ -4,6 +4,10 @@ API REST para gerenciar uma biblioteca pessoal de jogos. Permite cadastrar, cons
 
 > Este repositório contém o **backend**. O front-end (HTML, CSS e JavaScript) fica em um repositório separado: ```https://github.com/arthurSchgg/game-library-frontend```.
 
+🌐 **API em produção:** `https://game-library-backend-ebrh.onrender.com/`
+
+📖 **Swagger UI:** `http://localhost:8085/swagger-ui/index.html`
+
 ---
 
 ## 🛠 Tecnologias
