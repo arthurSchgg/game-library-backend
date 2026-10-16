@@ -6,8 +6,6 @@ API REST para gerenciar uma biblioteca pessoal de jogos. Permite cadastrar, cons
 
 🌐 **API em produção:** `https://game-library-backend-ebrh.onrender.com/`
 
-📖 **Swagger UI:** `http://localhost:8085/swagger-ui/index.html`
-
 ---
 
 ## 🛠 Tecnologias
