@@ -1,4 +1,4 @@
-package com.br.game_library.dto.game;
+package com.br.game_library.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
@@ -24,8 +24,10 @@ public record GameRequestDTO(
         @Size(max = 150)
         String title,
 
-        Long steamAppId,
-
+        @Schema(
+                description = "Game cover",
+                example = "https://cdn.akamai.steamstatic.com/steam/apps/1091500/header.jpg"
+        )
         String imageUrl,
 
         @Schema(

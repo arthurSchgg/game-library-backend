@@ -1,8 +1,8 @@
 package com.br.game_library.mapper;
 
-import com.br.game_library.dto.game.GameRequestDTO;
-import com.br.game_library.dto.game.GameRequestUpdateDTO;
-import com.br.game_library.dto.game.GameResponseDTO;
+import com.br.game_library.dto.GameRequestDTO;
+import com.br.game_library.dto.GameRequestUpdateDTO;
+import com.br.game_library.dto.GameResponseDTO;
 import com.br.game_library.entity.Game;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +27,6 @@ public class GameMapper {
         return new GameResponseDTO(
                 game.getId(),
                 game.getTitle(),
-                game.getSteamAppId(),
                 game.getImageUrl(),
                 game.getGenre(),
                 game.getPlatform(),
@@ -48,7 +47,6 @@ public class GameMapper {
         Game game = new Game();
 
         game.setTitle(dto.title());
-        game.setSteamAppId(dto.steamAppId());
         game.setImageUrl(dto.imageUrl());
         game.setGenre(dto.genre());
         game.setPlatform(dto.platform());
@@ -82,7 +80,6 @@ public class GameMapper {
      */
     public void updateEntity(GameRequestUpdateDTO requestUpdateDTO, Game game){
         game.setTitle(requestUpdateDTO.title());
-        game.setSteamAppId(requestUpdateDTO.steamAppId());
         game.setImageUrl(requestUpdateDTO.imageUrl());
         game.setGenre(requestUpdateDTO.genre());
         game.setPlatform(requestUpdateDTO.platform());
