@@ -1,4 +1,4 @@
-package com.br.game_library.dto.game;
+package com.br.game_library.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
@@ -7,8 +7,6 @@ import jakarta.validation.constraints.*;
  * Input data for registering the Game entity
  *
  * @param title       Title of the game
- * @param steamAppId  Steam app ID of the game (optional)
- * @param imageUrl    URL of the game cover image
  * @param genre       Genre of the game
  * @param platform    Platform of the game
  * @param releaseYear ReleaseYear of the game
@@ -27,14 +25,8 @@ public record GameRequestDTO(
         String title,
 
         @Schema(
-                description = "Steam app ID of the game (optional, links the game to the Steam Store)",
-                example = "1245620"
-        )
-        Long steamAppId,
-
-        @Schema(
-                description = "URL of the game cover image",
-                example = "https://cdn.akamai.steamstatic.com/steam/apps/1245620/header.jpg"
+                description = "Game cover",
+                example = "https://cdn.akamai.steamstatic.com/steam/apps/1091500/header.jpg"
         )
         String imageUrl,
 

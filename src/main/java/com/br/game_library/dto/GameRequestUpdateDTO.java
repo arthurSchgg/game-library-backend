@@ -1,4 +1,4 @@
-package com.br.game_library.dto.game;
+package com.br.game_library.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
@@ -7,8 +7,6 @@ import jakarta.validation.constraints.*;
  * Input data for updating a Game
  *
  * @param title       New name
- * @param steamAppId  New Steam app ID (optional)
- * @param imageUrl    New URL of the cover image
  * @param genre       New genre
  * @param platform    New platform
  * @param releaseYear New release year
@@ -27,14 +25,8 @@ public record GameRequestUpdateDTO(
         String title,
 
         @Schema(
-                description = "A new Steam app ID for the game (optional)",
-                example = "1245620"
-        )
-        Long steamAppId,
-
-        @Schema(
-                description = "A new URL of the game cover image",
-                example = "https://cdn.akamai.steamstatic.com/steam/apps/1245620/header.jpg"
+                description = "Game cover",
+                example = "https://cdn.akamai.steamstatic.com/steam/apps/1091500/header.jpg"
         )
         String imageUrl,
 

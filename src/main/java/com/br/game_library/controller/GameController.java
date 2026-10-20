@@ -1,9 +1,9 @@
-package com.br.game_library.controller.game;
+package com.br.game_library.controller;
 
-import com.br.game_library.dto.game.GameRequestDTO;
-import com.br.game_library.dto.game.GameRequestUpdateDTO;
-import com.br.game_library.dto.game.GameResponseDTO;
-import com.br.game_library.service.game.GameService;
+import com.br.game_library.dto.GameRequestDTO;
+import com.br.game_library.dto.GameRequestUpdateDTO;
+import com.br.game_library.dto.GameResponseDTO;
+import com.br.game_library.service.GameService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.headers.Header;
