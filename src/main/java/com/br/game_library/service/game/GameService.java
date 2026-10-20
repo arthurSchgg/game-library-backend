@@ -42,7 +42,29 @@ public class GameService {
      * @return Save Game DTO, with ID already created
      */
     public GameResponseDTO registerGame(GameRequestDTO requestDTO){
+
         Game game = mapper.toEntity(requestDTO);
+
+        try {
+
+            String gameTitle = requestDTO.title();
+
+            var searchResult = steamService.searchByName(gameTitle);
+
+            if(searchResult != null && searchResult.items() != null && !searchResult.items()
+                    .isEmpty()) {
+
+                Long appId = searchResult.items().get(0).id();
+
+                var detailsGame = steamService.findGame(appId);
+
+                if(detailsGame != null && detailsGame.data() != null){
+                    game.setImageUrl(detailsGame.data().header_image());
+                }
+            }
+        } catch (Exception e){
+            System.out.println("Unable to retrieve the cover art from Steam: " + e.getMessage());
+        }
 
         Game salvo = repository.save(game);
 
