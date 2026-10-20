@@ -1,12 +1,11 @@
-package com.br.game_library.service.game;
+package com.br.game_library.service;
 
-import com.br.game_library.dto.game.GameRequestDTO;
-import com.br.game_library.dto.game.GameRequestUpdateDTO;
-import com.br.game_library.dto.game.GameResponseDTO;
+import com.br.game_library.dto.GameRequestDTO;
+import com.br.game_library.dto.GameRequestUpdateDTO;
+import com.br.game_library.dto.GameResponseDTO;
 import com.br.game_library.entity.Game;
 import com.br.game_library.mapper.GameMapper;
 import com.br.game_library.repository.GameRepository;
-import com.br.game_library.service.steam.SteamService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,19 +19,16 @@ public class GameService {
 
     private final GameRepository repository;
     private final GameMapper mapper;
-    private final SteamService steamService;
 
     /**
      * Made a service with yours dependencies
      *
      * @param repository Persistence repository of Game
      * @param mapper Converter between Entity and DTO's
-     * @param steamService Steam integration service layer
      */
-    public GameService(GameRepository repository, GameMapper mapper, SteamService steamService) {
+    public GameService(GameRepository repository, GameMapper mapper) {
         this.repository = repository;
         this.mapper = mapper;
-        this.steamService = steamService;
     }
 
     /**
@@ -42,32 +38,8 @@ public class GameService {
      * @return Save Game DTO, with ID already created
      */
     public GameResponseDTO registerGame(GameRequestDTO requestDTO){
-
         Game game = mapper.toEntity(requestDTO);
-
-        try {
-
-            String gameTitle = requestDTO.title();
-
-            var searchResult = steamService.searchByName(gameTitle);
-
-            if(searchResult != null && searchResult.items() != null && !searchResult.items()
-                    .isEmpty()) {
-
-                Long appId = searchResult.items().get(0).id();
-
-                var detailsGame = steamService.findGame(appId);
-
-                if(detailsGame != null && detailsGame.data() != null){
-                    game.setImageUrl(detailsGame.data().header_image());
-                }
-            }
-        } catch (Exception e){
-            System.out.println("Unable to retrieve the cover art from Steam: " + e.getMessage());
-        }
-
         Game salvo = repository.save(game);
-
         return mapper.toResponseDTO(salvo);
     }
 

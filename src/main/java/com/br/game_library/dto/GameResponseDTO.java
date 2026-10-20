@@ -1,4 +1,4 @@
-package com.br.game_library.dto.game;
+package com.br.game_library.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -29,8 +29,6 @@ public record GameResponseDTO(
                 example = "Fortnite"
         )
         String title,
-
-        Long steamAppId,
 
         @Schema(
                 description = "Image url of the game",
