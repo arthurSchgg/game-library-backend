@@ -4,9 +4,11 @@ import com.br.game_library.dto.GameRequestDTO;
 import com.br.game_library.dto.GameRequestUpdateDTO;
 import com.br.game_library.dto.GameResponseDTO;
 import com.br.game_library.entity.Game;
+import com.br.game_library.exception.GameNotFoundException;
 import com.br.game_library.mapper.GameMapper;
 import com.br.game_library.repository.GameRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -37,6 +39,7 @@ public class GameService {
      * @param requestDTO Game data to register
      * @return Save Game DTO, with ID already created
      */
+    @Transactional
     public GameResponseDTO registerGame(GameRequestDTO requestDTO){
         Game game = mapper.toEntity(requestDTO);
         Game salvo = repository.save(game);
@@ -48,6 +51,7 @@ public class GameService {
      *
      * @return A list of DTO's (empty if there are no records)
      */
+    @Transactional(readOnly = true)
     public List<GameResponseDTO> list(){
         List<Game> games = repository.findAll();
         return mapper.toResponseList(games);
@@ -60,9 +64,10 @@ public class GameService {
      * @return Game DTO found
      * @throws RuntimeException If no Game with the specified ID exists
      */
+    @Transactional(readOnly = true)
     public GameResponseDTO findId(Long id){
         Game game = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Game not found with ID: " + id));
+                .orElseThrow(() -> new GameNotFoundException("Game not found with ID: " + id));
 
         return mapper.toResponseDTO(game);
     }
@@ -73,6 +78,7 @@ public class GameService {
      * @param title Title of the Game
      * @return Game DTO found
      */
+    @Transactional(readOnly = true)
     public List<GameResponseDTO> findByTitle(String title){
         List<Game> games = repository.findByTitleContainingIgnoreCase(title);
         return mapper.toResponseList(games);
@@ -86,9 +92,10 @@ public class GameService {
      * @return Updated Game DTO
      * @throws RuntimeException If no Game with the specified ID exists
      */
+    @Transactional
     public GameResponseDTO update(Long id, GameRequestUpdateDTO requestUpdateDTO){
         Game game = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Game not found with ID: " + id));
+                .orElseThrow(() -> new GameNotFoundException("Game not found with ID: " + id));
 
         mapper.updateEntity(requestUpdateDTO, game);
 
@@ -104,9 +111,10 @@ public class GameService {
      * @return The Favorite attribute of the Game entity changed to True or False
      * @throws RuntimeException If no Game with the specified ID exists
      */
+    @Transactional
     public GameResponseDTO toggleGame(Long id){
         Game game = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Game not found with ID: " + id));
+                .orElseThrow(() -> new GameNotFoundException("Game not found with ID: " + id));
 
         game.setFavorite(!Boolean.TRUE.equals(game.getFavorite()));
 
@@ -121,9 +129,10 @@ public class GameService {
      * @param id Identifier of the Game
      * @throws RuntimeException If no Game with the specified ID exists
      */
+    @Transactional
     public void remove(Long id){
         Game game = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Game not found with ID: " + id));
+                .orElseThrow(() -> new GameNotFoundException("Game not found with ID: " + id));
 
         repository.delete(game);
     }
