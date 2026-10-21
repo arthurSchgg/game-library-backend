@@ -1,169 +1,229 @@
 # 🎮 Game Library API
 
-REST API to manage a personal game library. It allows you to create, query, update, favorite, and delete games, and it uses the **Steam Store** to find the *app ID* and the *cover image* of each game based on its name.
+REST API for managing a personal video game library. It supports creating, listing, searching, updating, favoriting, and deleting games. Each game can include descriptive metadata and an `imageUrl` for its cover art.
 
-> This repository contains the **backend**. The front-end (HTML, CSS, and JavaScript) lives in a separate repository: `https://github.com/arthurSchgg/game-library-frontend`.
+> This repository contains the **backend**. The front-end (HTML, CSS, and JavaScript) is maintained separately: [game-library-frontend](https://github.com/arthurSchgg/game-library-frontend).
 
-🌐 **API in production:** `https://game-library-backend-ebrh.onrender.com/`
-
----
+- **Production API:** https://game-library-backend-ebrh.onrender.com
+- **Production Swagger UI:** https://game-library-backend-ebrh.onrender.com/swagger-ui.html
 
 ## 🛠 Tech Stack
 
 | Technology | Purpose |
 |---|---|
-| Java 21 | Language |
-| Spring Boot 4.1.1 | Framework (Web MVC, Data JPA, Validation) |
-| MySQL 8.4 | Database (via Docker) |
-| Hibernate / JPA | Persistence |
-| Springdoc OpenAPI | Swagger documentation |
-| RestClient | Steam Store API consumption |
-| Lombok | Boilerplate reduction on the entity |
-| Maven | Build and dependencies |
-
----
+| Java 21 | Programming language |
+| Spring Boot 4.1.1 | Application framework |
+| Spring Web MVC | REST endpoints and HTTP handling |
+| Spring Data JPA / Hibernate | Persistence and ORM |
+| Jakarta Bean Validation | Validation of request bodies |
+| MySQL 8.4 | Relational database |
+| Springdoc OpenAPI 2.8.13 | OpenAPI specification and Swagger UI |
+| Lombok | Reduces boilerplate in the JPA entity |
+| Maven | Build and dependency management |
+| Docker / Docker Compose | Containerized application and local database |
 
 ## 🏗 Architecture
 
-The project is split into layers, each with a single responsibility:
+The application is organized in layers, with each layer responsible for a distinct part of the request flow:
 
-```
+```text
 Client (front-end)
-      │  JSON
+      │ HTTP / JSON
       ▼
-┌─────────────┐   validates (@Valid) and returns ResponseEntity
-│ Controller  │   GameController · SteamController
-└─────┬───────┘
+Controller (GameController)
+      │ validates request DTOs and builds HTTP responses
       ▼
-┌─────────────┐   business rules, converts Entity ⇄ DTO
-│  Service    │   GameService · SteamService
-└─────┬───────┘
-      ├──► Mapper ───► converts Game ⇄ DTOs
+Service (GameService)
+      │ business rules and transaction boundaries
+      ├──────────► Mapper (GameMapper)
+      │             converts between DTOs and the Game entity
       ▼
-┌─────────────┐
-│ Repository  │   GameRepository (Spring Data JPA) ──► MySQL
-└─────────────┘
+Repository (GameRepository)
+      │ Spring Data JPA
+      ▼
+MySQL
 ```
 
-**Folder structure**
+The `Game` entity is used internally for persistence. The API receives and returns DTOs, rather than exposing the entity directly. `GlobalExceptionHandler` centralizes error responses, and `WebConfig` defines the allowed browser origins.
 
-```
+### Project structure
+
+```text
 src/main/java/com/br/game_library
-├── config/        # CORS, RestClient, and OpenAPI
-├── controller/    # game/ and steam/
-├── dto/           # game/ and steam/ (records)
-├── entity/        # Game
-├── mapper/        # GameMapper
-├── repository/    # GameRepository
-└── service/       # game/ and steam/
+├── config/
+│   ├── OpenApiConfig.java
+│   ├── RestClientConfig.java
+│   └── WebConfig.java
+├── controller/
+│   └── GameController.java
+├── dto/
+│   ├── GameRequestDTO.java
+│   ├── GameRequestUpdateDTO.java
+│   └── GameResponseDTO.java
+├── entity/
+│   └── Game.java
+├── exception/
+│   ├── GameNotFoundException.java
+│   └── GlobalExceptionHandler.java
+├── mapper/
+│   └── GameMapper.java
+├── repository/
+│   └── GameRepository.java
+└── service/
+    └── GameService.java
 ```
 
-The `Game` entity never leaves the Service layer: the Controller only sees **DTOs**.
-
----
-
-## 🚀 How to Run
+## 🚀 Run locally
 
 ### Prerequisites
 
 - Java 21
 - Docker and Docker Compose
-- (Optional) Maven, since the project already includes the `mvnw` wrapper
+- Git (to clone the repository)
+- Maven is optional because the repository includes the Maven Wrapper
 
-### Step by step
+### 1. Start MySQL
 
-**1. Start the database**
+From the project root, run:
 
 ```bash
-cd docker
-docker compose up -d
+docker compose -f docker/docker-compose.yml up -d
 ```
 
-This creates the MySQL container `game-library-mysql` on port **3333** (host machine) with the database `game_library`.
+The Compose file starts MySQL 8.4 in the `game-library-mysql` container. The database is named `game_library`; host port `3333` maps to the container's port `3306`. The `mysql_data` volume keeps the database data across container restarts.
 
-**2. Run the application**
+### 2. Start the application
+
+Run the command from the project root:
+
+**Linux / macOS**
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
-(on Windows: `mvnw.cmd spring-boot:run`) or run the `GameLibraryApplication` class from your IDE.
+**Windows (Command Prompt)**
 
-**3. Access**
-
-- API: `http://localhost:8085`
-- Swagger UI: `http://localhost:8085/swagger-ui.html`
-
-### Configuration (`application.properties`)
-
-| Property | Value |
-|---|---|
-| `server.port` | `8085` |
-| `spring.datasource.url` | `jdbc:mysql://localhost:3333/game_library` |
-| `spring.datasource.username` / `password` | `root` / `root` |
-| `spring.jpa.hibernate.ddl-auto` | `update` (the `game` table is created/adjusted automatically) |
-
-> ⚠️ The credentials above are **for local development only**. In any other environment, use environment variables and never commit real passwords.
-
-### CORS
-
-`WebConfig` allows browser calls only from `http://localhost:5500` and `http://127.0.0.1:5500` (the default Live Server port). If your front-end uses a different port, adjust `allowedOrigins` in `config/WebConfig.java`.
-
----
-
-## 📖 Interactive Documentation (Swagger)
-
-With the application running, open:
-
-```
-http://localhost:8085/swagger-ui.html
+```bat
+mvnw.cmd spring-boot:run
 ```
 
-There you can see all endpoints, input and output formats, response codes, and **test requests directly from the browser** (*Try it out* button). The JSON specification is available at `/v3/api-docs`.
+**Windows (PowerShell)**
 
----
+```powershell
+.\mvnw.cmd spring-boot:run
+```
 
-## 🗃 Data Model and Validations
+You can also run `GameLibraryApplication` from your IDE.
 
-`game` table:
+### 3. Open the API
 
-| Field | Type | Rules |
+- **Base URL:** `http://localhost:8085`
+- **Swagger UI:** `http://localhost:8085/swagger-ui.html`
+- **OpenAPI JSON:** `http://localhost:8085/v3/api-docs`
+
+To stop the database container, run `docker compose -f docker/docker-compose.yml down`. This preserves the named volume. To also delete the local database data, use `docker compose -f docker/docker-compose.yml down -v`.
+
+## ⚙️ Configuration
+
+The application reads its port and database connection from environment variables. Defaults are intended for local development.
+
+| Environment variable | Default | Purpose |
 |---|---|---|
-| `id` | `Long` | Auto-generated |
-| `title` | `String` | **Required**, up to 150 characters |
-| `steamAppId` | `Long` | Optional |
-| `imageUrl` | `String` | Optional |
-| `genre` | `String` | Optional, up to 100 characters |
-| `platform` | `String` | Optional, up to 50 characters |
-| `releaseYear` | `Integer` | Optional, between 1970 and 2027 |
-| `rating` | `Double` | Optional, between 0.0 and 10.0 |
-| `description` | `String` | Optional (`TEXT`) |
-| `favorite` | `Boolean` | Starts as `false` |
+| `PORT` | `8085` | HTTP port used by Spring Boot |
+| `SPRING_DATASOURCE_URL` | `jdbc:mysql://localhost:3333/game_library` | JDBC connection URL |
+| `SPRING_DATASOURCE_USERNAME` | `root` | Database username |
+| `SPRING_DATASOURCE_PASSWORD` | `root` | Database password |
 
-The rules are enforced with `@Valid` on the input DTOs: invalid data is blocked **before** reaching the business logic, and the request returns `400 Bad Request`.
+The current JPA configuration uses `spring.jpa.hibernate.ddl-auto=update`, so Hibernate updates the schema as needed. SQL statements and formatted SQL are also enabled in the application properties.
 
-> On `PUT`, all fields are overwritten (including `steamAppId` and `imageUrl`). Resend the current values of any fields that should not change. The favorite status is **not** changed by `PUT`: use `PATCH` for that.
+> **Security note:** `root` / `root` are development defaults only. Set secure environment variables for deployed environments, and never commit production credentials to the repository.
 
----
+## 🌐 CORS
 
-## 🎯 Steam Integration
+The backend currently allows browser requests from these origins:
 
-The browser **cannot** call Steam directly, because the store does not allow CORS. That is why the API acts as a middleman (proxy):
+- `http://localhost:5500` (local Live Server)
+- `https://game-library-frontend-*.vercel.app` (matching Vercel deployments of the front-end)
 
+The configured methods are `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, and `OPTIONS`. If you use a different local port or host the front-end on another domain, update `allowedOriginPatterns` in `config/WebConfig.java`.
+
+## 📖 API endpoints
+
+All game endpoints use the `/v1/game-library` base path.
+
+| Method | Endpoint | Description | Success response |
+|---|---|---|---|
+| `GET` | `/v1/game-library` | Lists every registered game. Returns an empty array if the library is empty. | `200 OK` |
+| `POST` | `/v1/game-library` | Registers a game. New games start with `favorite: false`. The response includes a `Location` header for the created resource. | `201 Created` |
+| `GET` | `/v1/game-library/{id}` | Finds one game by its ID. | `200 OK` |
+| `GET` | `/v1/game-library/search?title=zelda` | Finds games whose titles contain the given text, ignoring case. | `200 OK` |
+| `PUT` | `/v1/game-library/{id}` | Replaces the editable data of an existing game. The favorite status is preserved. | `200 OK` |
+| `PATCH` | `/v1/game-library/{id}/favorite` | Toggles the game's favorite status between `true` and `false`. | `200 OK` |
+| `DELETE` | `/v1/game-library/{id}` | Deletes a game by its ID. | `204 No Content` |
+
+### Example request body
+
+Use this JSON with `POST /v1/game-library` to register a game:
+
+```json
+{
+  "title": "Cyberpunk 2077",
+  "imageUrl": "https://cdn.akamai.steamstatic.com/steam/apps/1091500/header.jpg",
+  "genre": "Role-playing",
+  "platform": "PC",
+  "releaseYear": 2020,
+  "rating": 9.0,
+  "description": "An open-world role-playing game."
+}
 ```
-Front-end ──► Game Library API ──► Steam Store
- (JS)          :8085               store.steampowered.com
+
+`imageUrl` is optional. The API stores the string provided by the client; it does not download, resize, or verify the image itself.
+
+### Example response
+
+A successful response from the game endpoints has this shape:
+
+```json
+{
+  "id": 1,
+  "title": "Cyberpunk 2077",
+  "imageUrl": "https://cdn.akamai.steamstatic.com/steam/apps/1091500/header.jpg",
+  "genre": "Role-playing",
+  "platform": "PC",
+  "releaseYear": 2020,
+  "rating": 9.0,
+  "description": "An open-world role-playing game.",
+  "favorite": false
+}
 ```
 
-**Flow to register a game with a cover image:**
+### Update behavior (`PUT`)
 
-1. The user types the game name.
-2. The front-end calls `GET /v1/steam/search?name=...` and displays the results.
-3. The user picks one (the search often returns DLCs and soundtracks as well).
-4. The front-end calls `GET /v1/steam/{appId}` to get `header_image` (a high-resolution cover).
-5. The front-end fills in `title`, `steamAppId`, and `imageUrl` and sends `POST /v1/game-library`.
+`PUT /v1/game-library/{id}` overwrites the editable fields: `title`, `imageUrl`, `genre`, `platform`, `releaseYear`, `rating`, and `description`. Send the current values for any fields you want to keep. If an optional field is omitted or sent as `null`, it can be saved as `null`. The `favorite` field is not modified by `PUT`; use the favorite endpoint instead.
 
-> Corporate networks with firewalls may block `store.steampowered.com`. In that case the API responds with `500` (SSL handshake error) on the Steam routes. The `game-library` routes keep working normally.
+### Validation rules
+
+Validation runs on the request DTOs before the service processes a request.
+
+| Field | Rules |
+|---|---|
+| `title` | Required; cannot be blank; maximum 150 characters |
+| `imageUrl` | Optional string; no URL-format validation is currently applied |
+| `genre` | Optional; maximum 100 characters |
+| `platform` | Optional; maximum 50 characters |
+| `releaseYear` | Optional; must be between 1970 and 2027, inclusive |
+| `rating` | Optional; must be between `0.0` and `10.0`, inclusive |
+| `description` | Optional text |
+| `favorite` | Set to `false` when a game is created; changed with the favorite endpoint |
+
+The API returns `400 Bad Request` for invalid request-body fields, `404 Not Found` when a requested game ID does not exist, and `500 Internal Server Error` for unexpected internal errors. Error responses use Spring's `ProblemDetail` format.
+
+## 🎮 Current scope and Steam data
+
+The current backend revision provides the game-library CRUD endpoints listed above. **Steam search/detail endpoints (`/v1/steam/...`) are not implemented in this revision**, and there is no active Steam lookup flow in the backend.
+
+The `Game` JPA entity still contains a `steamAppId` field, but the current request and response DTOs do not expose it. The `imageUrl` field can still store a cover-image URL supplied by the front-end or another source. The backend stores and returns that URL; displaying the image and preserving its aspect ratio are responsibilities of the front-end.
 
 ## 👤 Author
 
